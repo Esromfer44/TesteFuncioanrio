@@ -1,3 +1,5 @@
+package Trabalho.Atv03;
+
 public class Funcionario {
     private String nome;
     private int horasTrabalhadas;
