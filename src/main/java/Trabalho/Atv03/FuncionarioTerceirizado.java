@@ -19,7 +19,7 @@ public class FuncionarioTerceirizado extends Funcionario {
         return pagamento;
     }
 
-    // getters e setters para o atributo despesaAdicional
+
     public double getDespesaAdicional() {
         return despesaAdicional;
     }
