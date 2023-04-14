@@ -3,6 +3,7 @@ package Trabalho.Atv03;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -10,72 +11,89 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Atv03ApplicationTests {
 
 	@Test
-	public void testConstrutor() {
-		Funcionario funcionario = new Funcionario("João", 40, 50.0);
-		assertEquals("João", funcionario.getNome());
-		assertEquals(40, funcionario.getHorasTrabalhadas());
-		assertEquals(50.0, funcionario.getValorHora(), 0.001);
+	public void testConstrutorValoresValidos() {
+		Funcionario f = new Funcionario("João", 30, 20.0);
+		assertEquals("João", f.getNome());
+		assertEquals(30, f.getHorasTrabalhadas());
+		assertEquals(20.0, f.getValorHora(), 0.001);
 	}
 
 	@Test
-	public void testSetNome() {
-		Funcionario funcionario = new Funcionario("João", 40, 50.0);
-		funcionario.setNome("José");
-		assertEquals("José", funcionario.getNome());
+	public void testConstrutorNomeVazio() {
+		Funcionario f = new Funcionario("", 30, 20.0);
 	}
 
 	@Test
-	public void testSetHorasTrabalhadas() {
-		Funcionario funcionario = new Funcionario("João", 40, 50.0);
-		funcionario.setHorasTrabalhadas(35);
-		assertEquals(35, funcionario.getHorasTrabalhadas());
+	public void testConstrutorHorasTrabalhadasInvalidas() {
+		Funcionario f = new Funcionario("João", 50, 20.0);
 	}
 
 	@Test
-	public void testSetHorasTrabalhadasAcimaDoLimite() {
-		Funcionario funcionario = new Funcionario("João", 40, 50.0);
-		funcionario.setHorasTrabalhadas(50);
-		assertEquals(40, funcionario.getHorasTrabalhadas());
+	public void testConstrutorValorHoraNegativo() {
+		Funcionario f = new Funcionario("João", 30, -20.0);
 	}
 
 	@Test
-	public void testSetValorHora() {
-		Funcionario funcionario = new Funcionario("João", 40, 50.0);
-		funcionario.setValorHora(60.0);
-		assertEquals(60.0, funcionario.getValorHora(), 0.001);
+	public void testConstrutorValorHoraZero() {
+		Funcionario f = new Funcionario("João", 30, 0.0);
 	}
 
 	@Test
-	public void testSetValorHoraAbaixoDoLimite() {
-		Funcionario funcionario = new Funcionario("João", 40, 50.0);
-		funcionario.setValorHora(40.0);
-		assertEquals(52.8, funcionario.getValorHora(), 0.001);
+	public void testSetNomeVazio() {
+		Funcionario f = new Funcionario("João", 30, 20.0);
+		f.setNome("");
 	}
 
 	@Test
-	public void testSetValorHoraAcimaDoLimite() {
-		Funcionario funcionario = new Funcionario("João", 40, 50.0);
-		funcionario.setValorHora(70.0);
-		assertEquals(70.0, funcionario.getValorHora(), 0.001);
+	public void testSetHorasTrabalhadasValido() {
+		Funcionario f = new Funcionario("João", 30, 20.0);
+		f.setHorasTrabalhadas(35);
+		assertEquals(35, f.getHorasTrabalhadas());
 	}
 
 	@Test
-	public void testCalculaPagamento() {
-		Funcionario funcionario = new Funcionario("João", 40, 50.0);
-		assertEquals(2000.0, funcionario.calculaPagamento(), 0.001);
+	public void testSetHorasTrabalhadasInvalido() {
+		Funcionario f = new Funcionario("João", 30, 20.0);
+		f.setHorasTrabalhadas(50);
 	}
 
 	@Test
-	public void testCalculaPagamentoAbaixoDoSalarioMinimo() {
-		Funcionario funcionario = new Funcionario("João", 30, 30.0);
-		assertEquals(1320.0, funcionario.calculaPagamento(), 0.001);
+	public void testSetValorHoraValido() {
+		Funcionario f = new Funcionario("João", 30, 20.0);
+		f.setValorHora(25.0);
+		assertEquals(25.0, f.getValorHora(), 0.001);
+	}
+
+	@Test
+	public void testSetNomeTerceirizadoInvalido() {
+		try {
+			FuncionarioTerceirizado f = new FuncionarioTerceirizado("", 30, 50.0, 12);
+			fail("Deveria ter lançado uma exceção ao inserir um nome inválido");
+		} catch (IllegalArgumentException e) {
+			assertEquals("O nome não pode ser vazio", e.getMessage());
+		}
 	}
 	@Test
-	public void testCalculaPagamentoAcimaDoSalarioMinimo() {
-		Funcionario funcionario = new Funcionario("João", 50, 60.0);
-		double salarioMinimo = 1320.0;
-		double valorEsperado = 50 * 60.0; // 3000.0
-		assertTrue(valorEsperado >= salarioMinimo);
-		assertEquals(valorEsperado, funcionario.calculaPagamento(), 0.01);
+	public void testSetSalarioHoraZero() {
+		try {
+			Funcionario f = new Funcionario("João", 30, 0);
+			fail("Deveria lançar uma exceção ao informar salário hora zero.");
+		} catch (IllegalArgumentException e) {
+			assertEquals("O valor do salário hora deve ser maior que zero.", e.getMessage());
+		}
+
 	}
+	@Test
+	public void testSetSalarioHoraValido2() {
+		Funcionario f = new Funcionario("João", 30, 50.5);
+		assertEquals(50.5, f.getValorHora(), 0.001);
+	}
+
+	@Test
+	public void testSetSalarioHoraValido() {
+		Funcionario f = new Funcionario("João", 30, 20);
+		assertEquals(20, f.getValorHora(), 0.001);
+	}
+
 }
+
